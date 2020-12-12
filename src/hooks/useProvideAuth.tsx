@@ -1,4 +1,4 @@
-import {useEffect, useReducer } from 'react'
+import { useEffect, useReducer } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
 import type { User } from 'interfaces/user'
 import type { AuthorizeInput, LoginInput } from 'interfaces/input'
@@ -13,7 +13,7 @@ interface State {
 type Action  =
   | { type: 'LOGIN' }
   | { type: 'LOGOUT' }
-  | {type: 'AUTHORIZING'}
+  | { type: 'AUTHORIZING' }
   | { type: 'AUTHORIZATION_FAILED', error: Error }
   | { type: 'AUTHORIZATION_SUCCEED', user: User }
 
@@ -104,6 +104,7 @@ export function useProvideAuth() {
   }, [state, location, history])
 
   const authorize = async ({ accessToken }: AuthorizeInput) => {
+    dispatch({ type: 'AUTHORIZING' })
     try {
       const user: User = await AuthApi.authorize({ accessToken });
       dispatch({
