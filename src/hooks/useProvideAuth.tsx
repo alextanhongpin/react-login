@@ -109,7 +109,7 @@ export function useProvideAuth() {
       });
     } catch (error) {
       window.localStorage.removeItem("accessToken");
-      dispatch({ type: "AUTHORIZATION_FAILED", error: error.message });
+      dispatch({ type: "AUTHORIZATION_FAILED", error });
     }
   } 
 
@@ -121,7 +121,7 @@ export function useProvideAuth() {
       await authorize({ accessToken })
     } catch (error) {
       window.localStorage.removeItem("accessToken");
-      dispatch({ type: "AUTHORIZATION_FAILED", error: error.message });
+      dispatch({ type: "AUTHORIZATION_FAILED", error });
     }
   }
 
