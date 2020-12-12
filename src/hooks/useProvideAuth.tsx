@@ -27,6 +27,7 @@ const initialState = {
 const authReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "LOGIN":
+    case "AUTHORIZING":
       return {
         ...initialState,
         loading: true
@@ -35,25 +36,18 @@ const authReducer = (state: State, action: Action): State => {
       return {
         ...initialState
       };
-    case "AUTHORIZING":
+    case "AUTHORIZATION_FAILED": {
+      // The states have XOR relationship, only one should be set at a time,
+      // the rest would be reset to its initial state.
       return {
         ...initialState,
-        loading: true
-      };
-    case "AUTHORIZATION_FAILED": {
-      return {
-        ...state,
-        user: null,
         error: action.error.message,
-        loading: false
       };
     }
     case "AUTHORIZATION_SUCCEED": {
       return {
-        ...state,
+        ...initialState,
         user: action.user,
-        error: null,
-        loading: false
       };
     }
   }
@@ -62,7 +56,7 @@ const authReducer = (state: State, action: Action): State => {
 
 
 interface LocationState {
-    from: string
+  from: string
 }
 
 function checkPrivateRoute(currentPath: string): boolean {
@@ -79,7 +73,9 @@ export function useProvideAuth() {
   const location = useLocation<LocationState>()
 
   useEffect(() => {
+    // If the authorization is still in progress, skip the checking.
     if (state.loading) return
+
     const isAuthorized = (state.user !== null)
     const isPrivateRestricted = checkPrivateRestrictedRoute(location.pathname)
     const isPrivate = checkPrivateRoute(location.pathname)
