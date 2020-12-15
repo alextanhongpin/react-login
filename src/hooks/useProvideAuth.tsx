@@ -68,7 +68,7 @@ function checkPrivateRestrictedRoute(currentPath: string) : boolean {
 }
 
 export function useProvideAuth() {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+  const [state, dispatch] = useReducer(authReducer, {...initialState, loading: true});
   const history = useHistory()
   const location = useLocation<LocationState>()
 
